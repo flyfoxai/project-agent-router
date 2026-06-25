@@ -1,0 +1,32 @@
+# OS/editor files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Logs and runtime output
+*.log
+logs/
+tmp/
+temp/
+
+# Dependency/build caches for future tooling
+node_modules/
+.cache/
+dist/
+build/
+coverage/
+
+# Hermes/local agent runtime state
+.hermes-local/
+.agent-runtime/
+.sessions/
