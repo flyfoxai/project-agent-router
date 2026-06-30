@@ -1,8 +1,8 @@
 # Channel-Agnostic Project Conversation Adapter
 
 状态：P4 dry-run contract template  
-项目：Multi-Agent Orchestration System  
-project_id：multiagent-orchestration-system  
+项目：Project Agent Router  
+project_id：project-agent-router  
 适用范围：对话层项目状态、项目命令解析、通道 adapter 映射、Reporter 项目回显。
 
 ## 1. 目标
@@ -40,7 +40,7 @@ channel-adapter
 state-store
 - channel + conversation_id + user_id scoped state
 - do not write Hermes internal DB
-- local file under multiagent-orchestration-system for now
+- local file under project-agent-router for now
 ```
 
 ## 3. ConversationMessage 通用输入格式
@@ -75,8 +75,8 @@ metadata:
 
 ```yaml
 mode: "project_command | project_task | ask | system_meta | blocked"
-project_id: "ask | multiagent-orchestration-system | blocked | null"
-project_display_name: "ASK | Multi-Agent Orchestration System | blocked | null"
+project_id: "ask | project-agent-router | blocked | null"
+project_display_name: "ASK | Project Agent Router | blocked | null"
 routing_source: "explicit_project | current_project | default_project | ask_mode | system_meta | blocked_clarification"
 routing_confidence: "high | medium | low | blocked"
 requires_clarification: false
@@ -96,8 +96,8 @@ git_root: "<current_git_root | null>"
 git_root_status: "needs_migration | independent | null | blocked"
 dispatch_mode: "manual | blocked"
 actions:
-  update_current_project: "ask | multiagent-orchestration-system | null | unchanged"
-  update_default_project: "ask | multiagent-orchestration-system | null | unchanged"
+  update_current_project: "ask | project-agent-router | null | unchanged"
+  update_default_project: "ask | project-agent-router | null | unchanged"
 dry_run_work_order: null
 worker_auto_dispatch_triggered: false
 gateway_auto_dispatch_triggered: false
@@ -108,7 +108,7 @@ gateway_auto_dispatch_triggered: false
 状态文件必须位于 multiagent 项目内，例如：
 
 ```text
-/Users/hula/workspace/multiagent-orchestration-system/state/conversations/sample-state.json
+/Users/hula/workspace/project-agent-router/state/conversations/sample-state.json
 ```
 
 schema：
@@ -119,7 +119,7 @@ schema：
   "conversations": {
     "<channel>:<conversation_id>:<user_id>": {
       "current_project": "ask",
-      "default_project": "multiagent-orchestration-system",
+      "default_project": "project-agent-router",
       "updated_at": "2026-06-29T12:00:00+08:00",
       "last_routing_source": "project_use",
       "last_message_id": "msg-xxx"
@@ -142,7 +142,7 @@ schema：
 /project list
 /project current
 /project use ask
-/project use multiagent-orchestration-system
+/project use project-agent-router
 /project default ask
 /project clear
 /system status
@@ -158,7 +158,7 @@ schema：
 当前项目是什么？
 我下面说的话对哪个项目有效？
 切到 ASK
-切到 multiagent-orchestration-system
+切到 project-agent-router
 接下来都按 ASK 项目处理
 取消当前项目
 只做通用分析，不进入项目

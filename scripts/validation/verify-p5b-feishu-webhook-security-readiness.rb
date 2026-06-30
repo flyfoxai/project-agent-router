@@ -279,7 +279,7 @@ flag = ->(name) { checks.find { |c| c[:name] == name }&.dig(:ok) ? 'YES' : 'NO' 
 
 result = {
   generated_at: Time.now.iso8601,
-  project_id: 'multiagent-orchestration-system',
+  project_id: 'project-agent-router',
   security_gate: SECURITY_GATE.to_s,
   config: CONFIG.to_s,
   script: __FILE__,

@@ -14,7 +14,7 @@ A2A_TEMPLATE = ROOT.join('templates', 'a2a-work-order-protocol.md')
 ROUTER = ROOT.join('scripts', 'gateway', 'project-router.rb')
 
 PARENT_WORKSPACE = '/Users/hula/workspace'
-REQUIRED_PROJECTS = %w[ask multiagent-orchestration-system].freeze
+REQUIRED_PROJECTS = %w[ask project-agent-router].freeze
 ROUTING_PRIORITY = %w[
   explicit_project_id
   explicit_project_alias
@@ -105,8 +105,8 @@ case1 = router_case('explicit_ask_route', '对 ASK 项目检查状态', [])
 case1[:ok] = case1[:ok_exit] && case1[:output]['project_id'] == 'ask' && case1[:output]['board'] == 'ask' && case1[:output]['workspace_path'] == '/Users/hula/workspace/ASK' && case1[:output]['git_root_status'] == 'needs_migration' && case1[:output]['worker_auto_dispatch_triggered'] == false && case1[:output]['gateway_auto_dispatch_triggered'] == false
 validation_cases << case1
 
-case2 = router_case('explicit_multiagent_route', '对 multiagent-orchestration-system 项目生成项目列表报告', [])
-case2[:ok] = case2[:ok_exit] && case2[:output]['project_id'] == 'multiagent-orchestration-system' && case2[:output]['board'] == 'multiagent-orchestration-system' && case2[:output]['workspace_path'] == ROOT.to_s && %w[independent ok].include?(case2[:output]['git_root_status'])
+case2 = router_case('explicit_multiagent_route', '对 project-agent-router 项目生成项目列表报告', [])
+case2[:ok] = case2[:ok_exit] && case2[:output]['project_id'] == 'project-agent-router' && case2[:output]['board'] == 'project-agent-router' && case2[:output]['workspace_path'] == ROOT.to_s && %w[independent ok].include?(case2[:output]['git_root_status'])
 validation_cases << case2
 
 case3 = router_case('workspace_container_block', '在 /Users/hula/workspace 里执行项目任务', ['--workspace', PARENT_WORKSPACE], expect_blocked: true)
@@ -121,8 +121,8 @@ case5 = router_case('ask_high_risk_action_block', '对 ASK 执行 push 或自动
 case5[:ok] = case5[:ok_exit] && case5[:output]['project_id'] == 'ask' && case5[:output]['blocked'] == true && case5[:output]['reason'] == 'human_approval_required_or_ask_git_root_needs_migration' && case5[:output]['worker_auto_dispatch_triggered'] == false && case5[:output]['gateway_auto_dispatch_triggered'] == false
 validation_cases << case5
 
-case6 = router_case('reporter_project_echo', '当前项目是什么？', ['--current-project', 'multiagent-orchestration-system'])
-case6[:ok] = case6[:ok_exit] && case6[:output]['project_id'] == 'multiagent-orchestration-system' && header_includes?(case6[:output])
+case6 = router_case('reporter_project_echo', '当前项目是什么？', ['--current-project', 'project-agent-router'])
+case6[:ok] = case6[:ok_exit] && case6[:output]['project_id'] == 'project-agent-router' && header_includes?(case6[:output])
 validation_cases << case6
 
 project_list = projects.values.map { |p| { 'project_id' => p['project_id'], 'board' => p['default_board'], 'workspace_path' => p['task_guard_workspace'], 'git_root_status' => p['git_root_status'] } }
@@ -132,15 +132,15 @@ case7 = {
   command: 'registry projects list',
   exit_code: 0,
   stderr: '',
-  output: { 'projects' => project_list, 'current_project' => 'multiagent-orchestration-system', 'default_project' => 'multiagent-orchestration-system' },
+  output: { 'projects' => project_list, 'current_project' => 'project-agent-router', 'default_project' => 'project-agent-router' },
   ok_exit: true
 }
 case7[:ok] = project_list.map { |p| p['project_id'] }.sort == REQUIRED_PROJECTS.sort && project_list.all? { |p| p['git_root_status'] }
 validation_cases << case7
 
-case8 = router_case('kanban_a2a_dry_run_metadata', '创建一个 dry-run work order，不派工。', ['--project-id', 'multiagent-orchestration-system', '--dry-run-work-order'])
+case8 = router_case('kanban_a2a_dry_run_metadata', '创建一个 dry-run work order，不派工。', ['--project-id', 'project-agent-router', '--dry-run-work-order'])
 wo = case8[:output]['dry_run_work_order'] || {}
-case8[:ok] = case8[:ok_exit] && wo['dry_run'] == true && wo.dig('project', 'project_id') == 'multiagent-orchestration-system' && wo.dig('routing', 'conflict_resolution_order') == ROUTING_PRIORITY && wo.dig('dispatch', 'worker_auto_dispatch_triggered') == false && wo.dig('dispatch', 'gateway_auto_dispatch_triggered') == false && wo.dig('dispatch', 'real_worker_task_created') == false
+case8[:ok] = case8[:ok_exit] && wo['dry_run'] == true && wo.dig('project', 'project_id') == 'project-agent-router' && wo.dig('routing', 'conflict_resolution_order') == ROUTING_PRIORITY && wo.dig('dispatch', 'worker_auto_dispatch_triggered') == false && wo.dig('dispatch', 'gateway_auto_dispatch_triggered') == false && wo.dig('dispatch', 'real_worker_task_created') == false
 validation_cases << case8
 
 validation_cases.each do |test_case|
@@ -162,7 +162,7 @@ all_checks_ok = checks.all? { |check| check[:ok] }
 flag = ->(name) { checks.find { |c| c[:name] == name }&.dig(:ok) ? 'YES' : 'NO' }
 result = {
   generated_at: Time.now.iso8601,
-  project_id: 'multiagent-orchestration-system',
+  project_id: 'project-agent-router',
   registry: REGISTRY.to_s,
   router: ROUTER.to_s,
   script: __FILE__,

@@ -16,6 +16,10 @@
 # Logs and runtime output
 *.log
 logs/
+state/
+reports/validation-evidence/
+hermes-tasks/
+*.lock
 tmp/
 temp/
 

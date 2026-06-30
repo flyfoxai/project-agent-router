@@ -31,11 +31,11 @@ FORBIDDEN_ASK_PARENT_REPO_PATHS = [
   'ASK/tests'
 ].freeze
 
-REQUIRED_REGISTRY_PROJECTS = %w[ask multiagent-orchestration-system].freeze
+REQUIRED_REGISTRY_PROJECTS = %w[ask project-agent-router].freeze
 REQUIRED_TASK_GUARD_STRINGS = [
   'Task Guard Project Overlay Registry Gate',
   'config/projects.yaml',
-  'project_id: "ask | multiagent-orchestration-system | blocked"',
+  'project_id: "ask | project-agent-router | blocked"',
   '/Users/hula/workspace 是父级容器，不应作为普通业务项目执行。',
   'ASK_GIT_ROOT_STATUS=needs_migration',
   'project_id=blocked',
@@ -49,7 +49,7 @@ REQUIRED_A2A_STRINGS = [
   'summary.conclusion_first'
 ].freeze
 REQUIRED_REPORT_STRINGS = {
-  P0_REPORT => ['Project Overlay Registry 实施报告', 'project_id=multiagent-orchestration-system', 'task_guard 接入规划'],
+  P0_REPORT => ['Project Overlay Registry 实施报告', 'project_id=project-agent-router', 'task_guard 接入规划'],
   P1_REPORT => ['P1 Reporter 项目路由模板接入报告', 'REPORT_HEADER_REQUIRED=TRUE', 'FORBIDDEN_STATUS_START']
 }.freeze
 
@@ -85,7 +85,7 @@ if registry
   add_check(checks, 'TASK_GUARD_POLICY_KEYS_OK', registry.dig('task_guard_policy', 'short_term_evidence_must_include').to_a.include?('project_id') && registry.dig('task_guard_policy', 'completion_requires').to_a.include?('forbidden_scope_checked'), registry.fetch('task_guard_policy', {}).inspect)
 
   ask = projects['ask'] || {}
-  multiagent = projects['multiagent-orchestration-system'] || {}
+  multiagent = projects['project-agent-router'] || {}
   add_check(checks, 'ASK_BOUNDARY_OK', ask['business_root'] == '/Users/hula/workspace/ASK' && ask['current_git_root'] == '/Users/hula/workspace' && ask['git_root_status'] == 'needs_migration', ask.inspect)
   add_check(checks, 'MULTIAGENT_BOUNDARY_OK', multiagent['business_root'] == ROOT.to_s && multiagent['current_git_root'] == ROOT.to_s && multiagent['git_root_status'] == 'independent', multiagent.inspect)
 end
@@ -137,7 +137,7 @@ add_check(checks, 'SCOPED_STATUS_READABLE', code.zero?, scoped_status.join(' | '
 
 result = {
   generated_at: Time.now.iso8601,
-  project_id: 'multiagent-orchestration-system',
+  project_id: 'project-agent-router',
   workspace_path: ROOT.to_s,
   git_root: git_root,
   script: __FILE__,

@@ -385,7 +385,7 @@ begin
                    routing_source: 'blocked_clarification',
                    routing_confidence: 'blocked',
                    requires_clarification: true,
-                   response_text: "低置信度：未能确定项目。请明确项目，例如 /project use ask 或 /project use multiagent-orchestration-system。",
+                   response_text: "低置信度：未能确定项目。请明确项目，例如 /project use ask 或 /project use project-agent-router。",
                    current_project: entry['current_project'],
                    default_project: entry['default_project'],
                    **project_response_kwargs(fields)

@@ -16,7 +16,7 @@ ROOT = Pathname.new(__dir__).join('..', '..', '..').expand_path
 P5A_ADAPTER = ROOT.join('scripts', 'adapters', 'feishu', 'feishu-command-adapter.rb')
 STATE_ROOT = ROOT.join('state', 'conversations').expand_path
 LOG_ROOT = ROOT.join('logs', 'feishu-adapter').expand_path
-SAFE_PROJECT_IDS = %w[ask multiagent-orchestration-system].freeze
+SAFE_PROJECT_IDS = %w[ask project-agent-router].freeze
 
 options = {
   body_json: nil,

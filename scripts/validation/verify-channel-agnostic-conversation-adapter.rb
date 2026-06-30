@@ -15,7 +15,7 @@ SAMPLE_STATE = ROOT.join('state', 'conversations', 'sample-state.json')
 CORE = ROOT.join('scripts', 'conversation', 'project-conversation-router.rb')
 P3 = ROOT.join('scripts', 'validation', 'verify-gateway-project-routing.rb')
 P2 = ROOT.join('scripts', 'validation', 'verify-task-guard-project-registry.rb')
-REQUIRED_PROJECTS = %w[ask multiagent-orchestration-system].freeze
+REQUIRED_PROJECTS = %w[ask project-agent-router].freeze
 
 checks = []
 validation_cases = []
@@ -127,14 +127,14 @@ begin
   c3[:ok] = c3[:exit_code].zero? && c3[:output]['mode'] == 'project_command' && c3[:output]['project_id'] == 'ask' && c3[:output].dig('actions', 'update_current_project') == 'ask' && common_no_dispatch?(c3[:output]) && response_schema_ready?(c3[:output])
   validation_cases << c3.merge(name: 'use_ask_natural_language')
 
-  # 4. /project use multiagent-orchestration-system
-  c4 = run_core(conversation_message(channel: 'feishu', conversation_id: 'conv-a', user_id: 'user-1', message_id: 'm4', text: '/project use multiagent-orchestration-system'), state_file)
-  c4[:ok] = c4[:exit_code].zero? && c4[:output]['project_id'] == 'multiagent-orchestration-system' && c4[:output].dig('actions', 'update_current_project') == 'multiagent-orchestration-system' && common_no_dispatch?(c4[:output]) && response_schema_ready?(c4[:output])
+  # 4. /project use project-agent-router
+  c4 = run_core(conversation_message(channel: 'feishu', conversation_id: 'conv-a', user_id: 'user-1', message_id: 'm4', text: '/project use project-agent-router'), state_file)
+  c4[:ok] = c4[:exit_code].zero? && c4[:output]['project_id'] == 'project-agent-router' && c4[:output].dig('actions', 'update_current_project') == 'project-agent-router' && common_no_dispatch?(c4[:output]) && response_schema_ready?(c4[:output])
   validation_cases << c4.merge(name: 'project_use_multiagent_command')
 
   # 5. 我下面说的话对哪个项目有效？
   c5 = run_core(conversation_message(channel: 'feishu', conversation_id: 'conv-a', user_id: 'user-1', message_id: 'm5', text: '我下面说的话对哪个项目有效？'), state_file)
-  c5[:ok] = c5[:exit_code].zero? && c5[:output]['current_project'] == 'multiagent-orchestration-system' && c5[:output]['response_text'].include?('优先级') && c5[:output]['response_text'].include?('显式项目') && common_no_dispatch?(c5[:output]) && response_schema_ready?(c5[:output])
+  c5[:ok] = c5[:exit_code].zero? && c5[:output]['current_project'] == 'project-agent-router' && c5[:output]['response_text'].include?('优先级') && c5[:output]['response_text'].include?('显式项目') && common_no_dispatch?(c5[:output]) && response_schema_ready?(c5[:output])
   validation_cases << c5.merge(name: 'routing_scope_explanation')
 
   # 6. /project clear
@@ -164,7 +164,7 @@ begin
 
   # 11. channel isolation
   a1 = run_core(conversation_message(channel: 'feishu', conversation_id: 'conv-isolated', user_id: 'same-user', message_id: 'ma1', text: '/project use ask'), state_file)
-  b1 = run_core(conversation_message(channel: 'slack', conversation_id: 'conv-isolated', user_id: 'same-user', message_id: 'mb1', text: '/project use multiagent-orchestration-system'), state_file)
+  b1 = run_core(conversation_message(channel: 'slack', conversation_id: 'conv-isolated', user_id: 'same-user', message_id: 'mb1', text: '/project use project-agent-router'), state_file)
   a2 = run_core(conversation_message(channel: 'feishu', conversation_id: 'conv-isolated', user_id: 'same-user', message_id: 'ma2', text: '/project current'), state_file)
   b2 = run_core(conversation_message(channel: 'slack', conversation_id: 'conv-isolated', user_id: 'same-user', message_id: 'mb2', text: '/project current'), state_file)
   c11 = {
@@ -173,7 +173,7 @@ begin
     exit_code: [a1[:exit_code], b1[:exit_code], a2[:exit_code], b2[:exit_code]],
     stderr: [a1[:stderr], b1[:stderr], a2[:stderr], b2[:stderr]].reject(&:empty?).join(' | '),
     output: { 'feishu_current' => a2[:output]['current_project'], 'slack_current' => b2[:output]['current_project'], 'state_file' => state_file.to_s },
-    ok: a2[:output]['current_project'] == 'ask' && b2[:output]['current_project'] == 'multiagent-orchestration-system' && common_no_dispatch?(a1[:output]) && common_no_dispatch?(b1[:output]) && common_no_dispatch?(a2[:output]) && common_no_dispatch?(b2[:output])
+    ok: a2[:output]['current_project'] == 'ask' && b2[:output]['current_project'] == 'project-agent-router' && common_no_dispatch?(a1[:output]) && common_no_dispatch?(b1[:output]) && common_no_dispatch?(a2[:output]) && common_no_dispatch?(b2[:output])
   }
   validation_cases << c11
 
@@ -221,7 +221,7 @@ flag = ->(name) { checks.find { |c| c[:name] == name }&.dig(:ok) ? 'YES' : 'NO' 
 
 result = {
   generated_at: Time.now.iso8601,
-  project_id: 'multiagent-orchestration-system',
+  project_id: 'project-agent-router',
   registry: REGISTRY.to_s,
   template: TEMPLATE.to_s,
   sample_state: SAMPLE_STATE.to_s,

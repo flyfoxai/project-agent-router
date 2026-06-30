@@ -13,13 +13,13 @@ ROOT = Pathname.new(__dir__).join('..', '..', '..').expand_path
 CORE = ROOT.join('scripts', 'conversation', 'project-conversation-router.rb')
 STATE_ROOT = ROOT.join('state', 'conversations').expand_path
 LOG_ROOT = ROOT.join('logs', 'feishu-adapter').expand_path
-SUPPORTED_PROJECT_IDS = %w[ask multiagent-orchestration-system].freeze
+SUPPORTED_PROJECT_IDS = %w[ask project-agent-router].freeze
 SAFE_COMMAND_PATTERNS = [
   %r{\A/project\s+list\z}i,
   %r{\A/project\s+current\z}i,
   %r{\A/project\s+clear\z}i,
-  %r{\A/project\s+use\s+(ask|multiagent-orchestration-system)\z}i,
-  %r{\A/project\s+default\s+(ask|multiagent-orchestration-system)\z}i,
+  %r{\A/project\s+use\s+(ask|project-agent-router)\z}i,
+  %r{\A/project\s+default\s+(ask|project-agent-router)\z}i,
   %r{\A/system\s+status\z}i,
   %r{\A/orchestration\s+status\z}i
 ].freeze

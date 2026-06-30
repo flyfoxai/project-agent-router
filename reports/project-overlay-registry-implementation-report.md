@@ -2,25 +2,30 @@
 
 - 生成时间：2026-06-26 21:00 CST
 - 执行角色：ASK总管（Hermes Agent / Jarvis）
-- 目标项目：Multi-Agent Orchestration System
-- `project_id`：`multiagent-orchestration-system`
-- 业务根：`/Users/hula/workspace/multiagent-orchestration-system`
-- Git 根：`/Users/hula/workspace/multiagent-orchestration-system`
-- task_guard workspace：`/Users/hula/workspace/multiagent-orchestration-system`
+- 目标项目：Project Agent Router
+- `project_id`：`project-agent-router`
+- 业务根：`/Users/hula/workspace/project-agent-router`
+- Git 根：`/Users/hula/workspace/project-agent-router`
+- task_guard workspace：`/Users/hula/workspace/project-agent-router`
 - 本轮性质：人工批准后的 P0 Project Overlay Registry 草案落地与实施报告
+- project_name=Project Agent Router
+- project_id=project-agent-router
+- original_name=multiagent-orchestration-system
+- current_project_id=project-agent-router
+- 当前说明：本报告已作为 rename 后的当前权威 P0 报告同步；除 `original_name` 历史说明外，正式字段使用当前项目名与 project_id。
 
 ## 1. 本轮结论
 
 已按人工批准创建 Project Overlay Registry 草案：
 
 ```text
-/Users/hula/workspace/multiagent-orchestration-system/config/projects.yaml
+/Users/hula/workspace/project-agent-router/config/projects.yaml
 ```
 
 并输出本实施报告：
 
 ```text
-/Users/hula/workspace/multiagent-orchestration-system/reports/project-overlay-registry-implementation-report.md
+/Users/hula/workspace/project-agent-router/reports/project-overlay-registry-implementation-report.md
 ```
 
 本轮只做项目事实层草案与接入规划，不实施 Hermes core 改造、不直接写 Hermes 内部 DB、不迁移 ASK Git、不触发 Gateway 自动派发、不扩大 coder 并发、不执行 merge / commit / push / publish。
@@ -30,20 +35,20 @@
 用户批准要求执行：
 
 ```text
-/Users/hula/workspace/multiagent-orchestration-system/hermes-tasks/create-project-overlay-registry.md
+/Users/hula/workspace/project-agent-router/hermes-tasks/create-project-overlay-registry.md
 ```
 
-实际预检结果：该文件不存在。已在 `/Users/hula/workspace/multiagent-orchestration-system/hermes-tasks` 搜索 Markdown 任务文件，仅发现：
+实际预检结果：该文件不存在。已在 `/Users/hula/workspace/project-agent-router/hermes-tasks` 搜索 Markdown 任务文件，仅发现：
 
 ```text
-/Users/hula/workspace/multiagent-orchestration-system/hermes-tasks/post-upgrade-project-management-plan.md
+/Users/hula/workspace/project-agent-router/hermes-tasks/post-upgrade-project-management-plan.md
 ```
 
 因此本轮未伪造任务文件读取结果，而是基于以下真实输入继续：
 
 1. 老板当前飞书批准消息。
-2. 既有正式规划报告：`/Users/hula/workspace/multiagent-orchestration-system/reports/post-upgrade-project-management-plan.md`。
-3. 既有审计报告：`/Users/hula/workspace/multiagent-orchestration-system/reports/hermes-project-boundary-and-management-audit.md`。
+2. 既有正式规划报告：`/Users/hula/workspace/project-agent-router/reports/post-upgrade-project-management-plan.md`。
+3. 既有审计报告：`/Users/hula/workspace/project-agent-router/reports/hermes-project-boundary-and-management-audit.md`。
 4. ASK 多智能体编排 skill 的项目管理规划参考：`references/ask-post-upgrade-project-management-planning.md`。
 
 ## 3. 已创建的 Registry 内容
@@ -70,12 +75,12 @@ projects:
     current_git_root: /Users/hula/workspace
     desired_git_root: /Users/hula/workspace/ASK
     git_root_status: needs_migration
-  multiagent-orchestration-system:
-    project_id: multiagent-orchestration-system
-    business_root: /Users/hula/workspace/multiagent-orchestration-system
-    project_root: /Users/hula/workspace/multiagent-orchestration-system
-    current_git_root: /Users/hula/workspace/multiagent-orchestration-system
-    desired_git_root: /Users/hula/workspace/multiagent-orchestration-system
+  project-agent-router:
+    project_id: project-agent-router
+    business_root: /Users/hula/workspace/project-agent-router
+    project_root: /Users/hula/workspace/project-agent-router
+    current_git_root: /Users/hula/workspace/project-agent-router
+    desired_git_root: /Users/hula/workspace/project-agent-router
     git_root_status: independent
 ```
 
@@ -92,11 +97,11 @@ ASK 被登记为业务项目，但明确保留 Git 边界事实：
 
 ### 3.2 multiagent 项目登记
 
-multiagent-orchestration-system 被登记为独立项目：
+project-agent-router 被登记为独立项目：
 
-- 业务根：`/Users/hula/workspace/multiagent-orchestration-system`
-- 当前 Git 根：`/Users/hula/workspace/multiagent-orchestration-system`
-- 目标 Git 根：`/Users/hula/workspace/multiagent-orchestration-system`
+- 业务根：`/Users/hula/workspace/project-agent-router`
+- 当前 Git 根：`/Users/hula/workspace/project-agent-router`
+- 目标 Git 根：`/Users/hula/workspace/project-agent-router`
 - Git 状态：`independent`
 
 本轮两个目标产物都写在该项目内。
@@ -112,15 +117,15 @@ project_id=<project_id>; workspace_path=<workspace_path>; git_root=<git_root>
 本轮已使用的目标项目三元组为：
 
 ```text
-project_id=multiagent-orchestration-system;
-workspace_path=/Users/hula/workspace/multiagent-orchestration-system;
-git_root=/Users/hula/workspace/multiagent-orchestration-system
+project_id=project-agent-router;
+workspace_path=/Users/hula/workspace/project-agent-router;
+git_root=/Users/hula/workspace/project-agent-router
 ```
 
 规划规则：
 
 1. ASK 任务继续使用 `workspace_path=/Users/hula/workspace/ASK`，但 evidence 必须标注 `git_root=/Users/hula/workspace`。
-2. multiagent 任务使用独立 `workspace_path=/Users/hula/workspace/multiagent-orchestration-system`。
+2. multiagent 任务使用独立 `workspace_path=/Users/hula/workspace/project-agent-router`。
 3. 跨项目任务：ASK ledger 只保留索引指针，目标项目 ledger 保留真实执行状态和验证证据。
 4. completed 状态必须包含目标文件回读、live Git status、禁止范围检查证据。
 
@@ -128,10 +133,10 @@ git_root=/Users/hula/workspace/multiagent-orchestration-system
 
 ```json
 {
-  "project_id": "multiagent-orchestration-system",
-  "workspace_path": "/Users/hula/workspace/multiagent-orchestration-system",
-  "business_root": "/Users/hula/workspace/multiagent-orchestration-system",
-  "git_root": "/Users/hula/workspace/multiagent-orchestration-system",
+  "project_id": "project-agent-router",
+  "workspace_path": "/Users/hula/workspace/project-agent-router",
+  "business_root": "/Users/hula/workspace/project-agent-router",
+  "git_root": "/Users/hula/workspace/project-agent-router",
   "registry_version": 1
 }
 ```
@@ -213,9 +218,9 @@ task_guard workspace：{task_guard_workspace}
 ### 9.1 文件存在性
 
 ```text
-EXISTS /Users/hula/workspace/multiagent-orchestration-system/config/projects.yaml
-EXISTS /Users/hula/workspace/multiagent-orchestration-system/reports/project-overlay-registry-implementation-report.md
-MISSING /Users/hula/workspace/multiagent-orchestration-system/hermes-tasks/create-project-overlay-registry.md
+EXISTS /Users/hula/workspace/project-agent-router/config/projects.yaml
+EXISTS /Users/hula/workspace/project-agent-router/reports/project-overlay-registry-implementation-report.md
+MISSING /Users/hula/workspace/project-agent-router/hermes-tasks/create-project-overlay-registry.md
 ```
 
 结论：两个本轮目标产物均存在；用户批准消息中提到的任务文件仍不存在，已如实记录为输入偏差。
@@ -227,7 +232,7 @@ MISSING /Users/hula/workspace/multiagent-orchestration-system/hermes-tasks/creat
 ```text
 schema=project-overlay-registry/v1
 status=draft
-projects=ask,multiagent-orchestration-system
+projects=ask,project-agent-router
 ask_git_status=needs_migration
 multiagent_git_status=independent
 ```
@@ -237,7 +242,7 @@ multiagent_git_status=independent
 ### 9.3 Git 根验证
 
 ```text
-multiagent=/Users/hula/workspace/multiagent-orchestration-system
+multiagent=/Users/hula/workspace/project-agent-router
 ask=/Users/hula/workspace
 ```
 
@@ -291,6 +296,6 @@ D  ASK/tests/unit/phase4-token-bucket.test.ts
 ## 11. 产物路径
 
 ```text
-/Users/hula/workspace/multiagent-orchestration-system/config/projects.yaml
-/Users/hula/workspace/multiagent-orchestration-system/reports/project-overlay-registry-implementation-report.md
+/Users/hula/workspace/project-agent-router/config/projects.yaml
+/Users/hula/workspace/project-agent-router/reports/project-overlay-registry-implementation-report.md
 ```

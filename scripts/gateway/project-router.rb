@@ -153,7 +153,7 @@ def reporter_header(payload)
 end
 
 registry = load_registry
-unless registry.is_a?(Hash) && registry.dig('projects', 'ask') && registry.dig('projects', 'multiagent-orchestration-system')
+unless registry.is_a?(Hash) && registry.dig('projects', 'ask') && registry.dig('projects', 'project-agent-router')
   puts JSON.pretty_generate(blocked_payload('registry_missing_or_invalid', source: 'blocked_clarification'))
   exit 2
 end
