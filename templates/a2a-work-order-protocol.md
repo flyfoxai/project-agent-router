@@ -25,6 +25,28 @@ card_id: "t_xxx | none"
 actor: "ASK总管"
 assignee: "代码实现智能体 | 独立验证智能体 | Speckit执行智能体 | Gemini顾问智能体 | 调度台账监听器 | 协调Agent名"
 role_kind: "coder | reviewer | coordinator | reporter | speckit | advisor | ledger"
+project:
+  project_id: "ask | multiagent-orchestration-system | blocked"
+  display_name: "ASK | Multi-Agent Orchestration System | blocked"
+  board: "ask | multiagent-orchestration-system | blocked"
+  workspace_path: "<absolute path from config/projects.yaml>"
+  current_git_root: "<absolute current_git_root from config/projects.yaml plus live verification>"
+  desired_git_root: "<absolute desired_git_root from config/projects.yaml>"
+  git_root_status: "needs_migration | independent | blocked"
+  dispatch_mode: "manual | blocked"
+routing:
+  source: "explicit_project_id | explicit_project_alias | board_slug | workspace_path | current_project | default_project | system_meta | blocked_clarification"
+  confidence: "high | medium | low | blocked"
+  conflict_resolution_order:
+    - explicit_project_id
+    - explicit_project_alias
+    - board_slug
+    - workspace_path
+    - current_project
+    - default_project
+    - system_meta
+    - blocked_clarification
+  requires_clarification: false
 target:
   project: ASK
   module: "<module / feature / package>"
@@ -54,6 +76,10 @@ dispatch:
   mode: "manual | auto"
   gateway_allowed: false
   active_executor_required: true
+  dry_run: "true | false"
+  worker_auto_dispatch_triggered: false
+  gateway_auto_dispatch_triggered: false
+  real_worker_task_created: false
 instructions:
   objective: "<one sentence objective>"
   context_refs:
@@ -77,8 +103,11 @@ stop_conditions:
 
 #### `WORK_ORDER` gate
 
+- Gateway / Dispatcher 生成任何 `WORK_ORDER` 前必须读取 `config/projects.yaml`，并先完成项目路由、边界校验、阻断判断与 Reporter 项目头回显；不得只靠 shell cwd 推断项目。
+- `WORK_ORDER.project` 与 `WORK_ORDER.routing` 是必填块；缺少时不得进入 worker、Kanban、session 或 profile。
 - 没有 `files_allowed` 或 `workspace.worktree` 的可写编码任务不得启动。
 - `dispatch.mode` 默认必须为 `manual`；只有 ASK总管显式写 `auto` 且 `gateway_allowed=true` 时，Gateway dispatcher 才能拾取。
+- P3 dry-run work order 必须设置 `dispatch.dry_run=true`、`worker_auto_dispatch_triggered=false`、`gateway_auto_dispatch_triggered=false`、`real_worker_task_created=false`。
 - 可写 worker 必须有 `locks.required=true` 或明确说明为什么不需要锁。
 - 没有真实 `session_id`、tmux 窗口、进程 PID、ledger 事件或输出路径时，不得宣称 worker 正在运行。
 
@@ -220,9 +249,23 @@ reporter: "ASK总管 | 总进度汇报Agent"
 report_scope: "single_run | batch | project"
 run_ids:
   - "ask-<date>-<short-slug>"
+project:
+  project_id: "ask | multiagent-orchestration-system | blocked"
+  display_name: "ASK | Multi-Agent Orchestration System | blocked"
+  business_root: "<absolute business root from config/projects.yaml>"
+  project_root: "<absolute project root from config/projects.yaml>"
+  current_git_root: "<absolute current git root from config/projects.yaml plus live verification>"
+  desired_git_root: "<absolute desired git root from config/projects.yaml>"
+  git_root_status: "independent | needs_migration | blocked"
+  task_guard_workspace: "<absolute task_guard workspace>"
+  target_repository: "<absolute target repository>"
+  routing_source: "config/projects.yaml"
+  routing_basis: "explicit_project_id | alias_match | task_guard_evidence | cwd_git_root | blocked_ambiguous"
+  routing_confidence: "high | medium | low | blocked"
+  header_required: true
 overall_status: "on_track | blocked | needs_decision | ready_for_review | done | risk"
 summary:
-  conclusion_first: "<one sentence conclusion>"
+  conclusion_first: "<project display name + one sentence conclusion>"
   completed:
     - "<completed item>"
   in_progress:
@@ -235,6 +278,7 @@ summary:
     - "<next action>"
 verification:
   checked_sources:
+    - "config/projects.yaml"
     - "task_guard ledger"
     - ".tasks evidence"
     - "git diff/status"
@@ -251,7 +295,10 @@ decisions_needed:
 
 #### `HUMAN_REPORT` gate
 
-- 面向老板的结论必须先说项目名和结论。
+- 面向老板的结论必须先说项目名和结论；`summary.conclusion_first` 必须以前缀 `项目：<display_name>` 或等价项目头开头。
+- 生成任何 `HUMAN_REPORT` 前，Reporter 必须先读取 `config/projects.yaml`，并把 `project` 块填充为 registry 中对应项目的真实字段；不得只凭当前工作目录、记忆或上一轮摘要补项目身份。
+- 项目查询必须按 `routing_policy.conflict_resolution_order` 执行：优先显式 `project_id`，其次 task_guard evidence、cwd/project root、Git top-level、Hermes profile cwd；命中多个项目、缺少 registry 条目或置信度为 `low` 时，必须设置 `project.project_id=blocked`、`overall_status=needs_decision | blocked`，并在 `decisions_needed` 中请求 ASK总管/老板澄清。
+- 项目切换必须由新的 `WORK_ORDER`、`HANDOFF` 或人工指令显式给出目标 `project_id`；切换后必须重新读取 `config/projects.yaml` 并重新验证 `project_root`、`current_git_root`、`target_repository`，不得沿用上一项目的 header。
 - 汇报必须区分已验证、未验证、阻塞、风险。
 - 不得把局部 focused pass 写成 full pass；不得把本地 merge gate 写成 PR 已打通。
 
