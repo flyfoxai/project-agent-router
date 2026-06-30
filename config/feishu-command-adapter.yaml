@@ -1,0 +1,68 @@
+# P5b Feishu command ingress adapter config
+# Scope: small-traffic project-management commands only.
+# This is NOT Hermes core config and does not enable worker auto-dispatch.
+version: 2
+adapter: feishu-command-ingress
+status: dry-run-manual
+feature_enabled: true
+webhook_enabled: true
+manual_dispatch_only: true
+worker_auto_dispatch_allowed: false
+gateway_auto_dispatch_allowed: false
+allowed_user_ids:
+  - user-allow-1
+  - user-allow-2
+allowed_commands:
+  - /project list
+  - /project current
+  - /project use <project_id>
+  - /project default <project_id>
+  - /project clear
+  - /system status
+  - /orchestration status
+allowed_project_ids:
+  - ask
+  - multiagent-orchestration-system
+user_project_acl:
+  user-allow-1:
+    - ask
+    - multiagent-orchestration-system
+  user-allow-2:
+    - multiagent-orchestration-system
+webhook_security:
+  verification_token_env: FEISHU_VERIFICATION_TOKEN
+  encrypt_key_env: FEISHU_ENCRYPT_KEY
+  signature_required: true
+  token_required: true
+  timestamp_tolerance_seconds: 300
+  challenge_event_types:
+    - url_verification
+idempotency:
+  enabled: true
+  ttl_seconds: 86400
+rate_limit:
+  max_commands: 3
+  window_seconds: 60
+state:
+  conversation_state_file: /Users/hula/workspace/multiagent-orchestration-system/state/conversations/feishu-command-state.json
+  rate_limit_state_file: /Users/hula/workspace/multiagent-orchestration-system/state/conversations/feishu-rate-limit-state.json
+  lock_file: /Users/hula/workspace/multiagent-orchestration-system/state/conversations/feishu-command-state.lock
+  idempotency_state_file: /Users/hula/workspace/multiagent-orchestration-system/state/conversations/feishu-idempotency-state.json
+audit:
+  log_file: /Users/hula/workspace/multiagent-orchestration-system/logs/feishu-adapter/feishu-command-audit.jsonl
+deployment:
+  mode: dry_run_http_lifecycle_plan
+  bind: 127.0.0.1:0
+  healthz: /healthz
+  readyz: /readyz
+  webhook: /feishu/events
+  shutdown: graceful_sigterm
+  disable_switch: config.webhook_enabled=false or --disabled or FEISHU_WEBHOOK_DISABLED=1
+  no_full_traffic: true
+  credential_source: env_only_for_live_limit
+  required_before_production:
+    - verify Feishu official challenge contract with real app credentials
+    - verify signature formula against real Feishu headers
+    - configure production secret source outside repository
+    - enable replay/idempotency TTL cleanup
+    - review file-state scaling limits
