@@ -1,5 +1,7 @@
 # Project Agent Router
 
+[中文说明](README.zh-CN.md)
+
 Project Agent Router helps an automation system work with more than one project without mixing them up.
 
 It keeps a small project registry, reads user commands, decides which project the command belongs to, and refuses to continue when the target project is unclear or the requested action is risky.
